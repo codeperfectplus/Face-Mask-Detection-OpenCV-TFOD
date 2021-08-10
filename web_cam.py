@@ -1,6 +1,11 @@
+import sys
+sys.path.append("models")
+sys.path.append(r"models/research")
+
+import tensorflow as tf
 import numpy as np
 import cv2
-import tensorflow as tf
+
 from object_detection.utils import label_map_util
 from object_detection.utils import config_util
 from object_detection.utils import visualization_utils as viz_utils
@@ -10,7 +15,6 @@ from object_detection.builders import model_builder
 def detect_fn(image, detection_model):
     image, shapes = detection_model.preprocess(image)
     prediction_dict = detection_model.predict(image, shapes)
-    print(prediction_dict)
     detections = detection_model.postprocess(prediction_dict, shapes)
 
     return detections, prediction_dict, tf.reshape(shapes, [-1])
@@ -20,7 +24,6 @@ def run(label_map_path, config_file_path, checkpoint_path):
 
     # Enable GPU dynamic memory allocation
     gpus = tf.config.experimental.list_physical_devices('GPU')
-    print(gpus)
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
 
